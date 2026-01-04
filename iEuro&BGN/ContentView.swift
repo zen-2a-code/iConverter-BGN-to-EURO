@@ -15,37 +15,46 @@ struct ContentView: View {
     private var rate = 1.95583 // 1 Еuro to BGN
     
     private let formatter = NumberFormatter()
+    private var isAnyFieldFoccused: Bool { isBGNFocused || isEuroFocused }
 
     var body: some View {
         ZStack {
+            
             LinearGradient(
                 stops: [
-                    .init(color: .white, location: 0.3),
-                    .init(color: Color(red: 0.0, green: 0.59, blue: 0.35), location: 0.5),
-                    .init(color: .red, location: 0.5),
-                    .init(color: Color.clear, location: 0.7)
+                    .init(color: .white, location: isAnyFieldFoccused ? 0.8 : 0.45),
+                    .init(color: Color(red: 0.0, green: 0.59, blue: 0.35),
+                          location: isAnyFieldFoccused ? 0.8 : 0.45),
+                    .init(color: Color(red: 0.0, green: 0.59, blue: 0.35),
+                            location: isAnyFieldFoccused ? 0.95 : 0.55),
+                    .init(color: .red, location: isAnyFieldFoccused ? 0.95 : 0.55)
                 ],
-                startPoint: .top,
-                endPoint: .bottomTrailing
+                startPoint: .topLeading,
+                endPoint: isAnyFieldFoccused ? .bottom : .bottomTrailing
             )
+            .offset(y: 50)
+            .overlay {
+                    Rectangle()
+                    .fill(.thinMaterial)
+                        .blendMode(.color)
+                }
+            .animation(.smooth(duration: 2), value: isAnyFieldFoccused)
             
             Image("euFlag")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .scaleEffect(1.1)
+                .scaleEffect(1.02)
                 .offset(y: 4)
+                .overlay {
+                        Rectangle()
+                            .fill(.regularMaterial)
+                            .blendMode(.color)
+                    }
                 .mask {
                     RadialGradient(stops: [
                         .init(color: .clear, location: 0.8),
-                        .init(color: .black, location: 0.9) // Fades the flag in
+                        .init(color: .black, location: 0.8)
                     ], center: .center, startRadius: 1, endRadius: 300)
-                }
-                .ignoresSafeArea()
-            
-            Rectangle()
-                .fill(.regularMaterial.blendMode(.color))
-                .overlay {
-                    Color.blue.opacity(0.15)
                 }
                 .ignoresSafeArea()
             

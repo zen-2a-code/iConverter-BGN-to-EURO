@@ -21,7 +21,7 @@ struct CurrencyView: View {
             HStack {
                 TextField(currencyISO, text: $amount)
                     .keyboardType(.decimalPad)
-                    .frame(width: 125, alignment: .leading)
+                    .frame(width: currencyName == "Euro:" ? 180 : 125, alignment: .leading)
                     .foregroundStyle(.secondary)
                     .focused(isAmountFocused)
                 
@@ -69,5 +69,12 @@ struct PreviewView: View {
 }
 
 #Preview("Euro") {
-    PreviewView(currencyName: "Euro:", currencyISO: "Euro", amount: "")
+    ZStack {
+        Color.blue
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .ignoresSafeArea(edges: .all)
+        
+        PreviewView(currencyName: "Euro:", currencyISO: "Euro", amount: "")
+            .colorScheme(ColorScheme.dark)
+    }
 }
