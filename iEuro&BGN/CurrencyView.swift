@@ -33,6 +33,7 @@ struct CurrencyView: View {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(.secondary)
                     }
+                    .buttonStyle(.plain)
                 }
             }
         }

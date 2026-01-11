@@ -19,53 +19,41 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            
-            LinearGradient(
-                stops: [
-                    .init(color: .white, location: isAnyFieldFoccused ? 0.8 : 0.45),
-                    .init(color: Color(red: 0.0, green: 0.59, blue: 0.35),
-                          location: isAnyFieldFoccused ? 0.8 : 0.45),
-                    .init(color: Color(red: 0.0, green: 0.59, blue: 0.35),
-                            location: isAnyFieldFoccused ? 0.95 : 0.55),
-                    .init(color: .red, location: isAnyFieldFoccused ? 0.95 : 0.55)
-                ],
-                startPoint: .topLeading,
-                endPoint: isAnyFieldFoccused ? .bottom : .bottomTrailing
-            )
-            .offset(y: 50)
-            .overlay {
-                    Rectangle()
-                    .fill(.thinMaterial)
-                        .blendMode(.color)
-                }
-            .animation(.smooth(duration: 2), value: isAnyFieldFoccused)
-            
-            Image("euFlag")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .scaleEffect(1.02)
-                .offset(y: 4)
-                .overlay {
+            ZStack {
+                Image("Flag_of_Bulgaria")
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(Circle())
+                    .scaleEffect(1.30)
+                
+                Image("euFlag")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .scaleEffect(1.02)
+                    .offset(y: 4)
+                    .overlay {
                         Rectangle()
                             .fill(.regularMaterial)
                             .blendMode(.color)
                     }
-                .mask {
-                    RadialGradient(stops: [
-                        .init(color: .clear, location: 0.8),
-                        .init(color: .black, location: 0.8)
-                    ], center: .center, startRadius: 1, endRadius: 300)
-                }
-                .ignoresSafeArea()
-            
+                    .mask(
+                        LinearGradient(
+                            colors: [.black, .clear],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+            }
+            .ignoresSafeArea()
+            .ignoresSafeArea(.keyboard)
+                
             VStack {
-                
-                OutlinedText(text: "Euro ↔ BGN converter")
+                OutlinedText(text: "Euro&BGN converter")
                 Spacer()
-                
+                    
                 VStack(alignment: .leading, spacing: 10) {
                     CurrencyView(currencyName: "Bulgarian Lev:", currencyISO: "BGN", amount: $bgnAmount, isAmountFocused: $isBGNFocused)
-                    
+                        
                     CurrencyView(currencyName: "Euro:", currencyISO: "Euro", amount: $euroAmount, isAmountFocused: $isEuroFocused)
                 }
                 .onChange(of: bgnAmount) { _, newValue in
@@ -94,7 +82,7 @@ struct ContentView: View {
             euroAmount = ""
             return
         }
-        euroAmount = String(format: "%.5f", (bgnValue.doubleValue / rate))
+        euroAmount = String(format: "%.5f", bgnValue.doubleValue / rate)
     }
     
     func performEuroToBgnConversion(_ newValue: String) {
@@ -104,7 +92,7 @@ struct ContentView: View {
             bgnAmount = ""
             return
         }
-        bgnAmount = String(format: "%.5f", (euroValue.doubleValue * rate))
+        bgnAmount = String(format: "%.5f", euroValue.doubleValue * rate)
         print("The value is: \(bgnAmount)")
     }
 }
